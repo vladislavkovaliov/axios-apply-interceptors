@@ -2,7 +2,7 @@
   "name": "test-axios-apply-interceptors",
   "version": "0.0.0-development",
   "description": "Based configured template with Semantic Relase",
-  "private": true,
+  "private": false,
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
   "scripts": {
