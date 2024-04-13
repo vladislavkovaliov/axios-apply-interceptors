@@ -1,28 +1,31 @@
 {
-  "name": "semantic-release-template",
+  "name": "test-axios-apply-interceptors",
   "version": "0.0.0-development",
   "description": "Based configured template with Semantic Relase",
-  "private": false,
-  "main": "index.js",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./types/index.d.ts",
   "scripts": {
+    "build": "rm -rf dist && rm -rf types && tsc",
     "commit": "cz",
     "test": "echo \"Error: no test specified\" && exit 1",
     "semantic-release": "semantic-release"
   },
-  "keywords": ["semantic"],
+  "keywords": [
+    "semantic"
+  ],
+  "files": [
+    "dist",
+    "types",
+    "LICENSE",
+    "README.md"
+  ],
   "author": "",
   "license": "ISC",
   "lint-staged": {
     "*.{ts,tsx}": [
       "git add"
     ]
-  },
-  "devDependencies": {
-    "commitizen": "^4.2.6",
-    "cz-conventional-changelog": "^3.3.0",
-    "husky": "^8.0.2",
-    "lint-staged": "^13.1.0",
-    "semantic-release": "^19.0.5"
   },
   "release": {
     "branches": [
@@ -34,7 +37,7 @@
         {
           "npmPublish": false
         }
-      ],       
+      ],
       "@semantic-release/github"
     ]
   },
@@ -45,6 +48,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vladislavkovaliov/semantic-release-template.git"
+    "url": "https://github.com/vladislavkovaliov/test-axios-apply-interceptors.git"
+  },
+  "dependencies": {
+    "typescript": "^5.4.5"
+  },
+  "devDependencies": {
+    "commitizen": "^4.2.6",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
+    "semantic-release": "^23.0.8"
   }
 }
