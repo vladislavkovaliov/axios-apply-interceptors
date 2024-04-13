@@ -23,20 +23,6 @@ jobs:
           cache: "npm"
       - run: npm ci
 
-  # test:
-  #   runs-on: ubuntu-latest
-  #   if: ${{ github.ref == 'refs/heads/main' }}
-  #   needs: [install]
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - name: Use Node.js ${{ matrix.node-version }}
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: ${{ matrix.node-version }}
-  #         cache: 'npm'
-  #     - run: npm ci
-  #     - run: npm run test:unit
-
   publish:
     permissions:
       contents: write
@@ -44,7 +30,6 @@ jobs:
       issues: write
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
-    # needs: [test]
     strategy:
       matrix:
         node-version: [20.x]
