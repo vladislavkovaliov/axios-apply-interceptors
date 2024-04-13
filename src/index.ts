@@ -13,3 +13,5 @@ export function applyInterceptors<T>(
     composeInterceptors(...errorInterceptors),
   );
 }
+
+console.log(42);
