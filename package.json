@@ -5,6 +5,12 @@
   "private": false,
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
     "build:old": "rm -rf dist && rm -rf types && tsc",
     "build": "rm -rf dist && tsup",
@@ -29,23 +35,9 @@
       "git add"
     ]
   },
-  "release": {
-    "branches": [
-      "main"
-    ],
-    "plugins": [
-      [
-        "@semantic-release/npm",
-        {
-          "npmPublish": true
-        }
-      ],
-      "@semantic-release/github"
-    ]
-  },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
+      "path": "./cz-adapter"
     }
   },
   "repository": {

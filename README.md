@@ -1,50 +1,76 @@
-# Axios Apply Interceptors
+# axios-apply-interceptors
 
-Make simple to add interceptors into axios and reusable.
+[![npm version](https://img.shields.io/npm/v/axios-apply-interceptors)](https://www.npmjs.com/package/axios-apply-interceptors)
+[![License](https://img.shields.io/npm/l/axios-apply-interceptors)](LICENSE)
 
-## Example
+Easily compose and apply multiple axios interceptors with a single call.
 
-Defining interceptor which adds session info to headers.
+## Why
 
-```tsx
-export function onFulfilledRequestSession(config: InternalAxiosRequestConfig) {
-  const sessionToken = sessionStorage.getItem("sessionToken");
-  const sessionId = sessionStorage.getItem("sessionId");
+`AxiosInterceptorManager.use()` only accepts a single pair of handlers. When you have multiple request or response interceptors, you'd normally chain them manually or flatten them into one function.
 
+This library lets you pass **arrays** of fulfilled and rejected handlers — they are composed automatically right-to-left (inner interceptor runs first).
+
+## Install
+
+```bash
+npm install axios-apply-interceptors
+```
+
+## Usage
+
+```ts
+import axios from "axios";
+import { applyInterceptors } from "axios-apply-interceptors";
+
+function addToken(config: InternalAxiosRequestConfig) {
   return {
     ...config,
-    headers: {
-      ...config.headers,
-      ...(!!sessionToken && { Authorization: `Bearer ${sessionToken}` }),
-      ...(!!sessionId && { "X-Session-Id": sessionId }),
-    } as AxiosRequestHeaders,
+    headers: { ...config.headers, Authorization: `Bearer ${getToken()}` },
   };
 }
-```
 
-Defining interceptor to process errors.
+function addLocale(config: InternalAxiosRequestConfig) {
+  return {
+    ...config,
+    headers: { ...config.headers, "Accept-Language": "en" },
+  };
+}
 
-```tsx
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function onRejectedRequest(error: any) {
+function onError(error: unknown) {
+  console.error(error);
   return Promise.reject(error);
 }
-```
 
-Let's implement apply interceptors axios config file.
-
-```tsx
-import AxiosFactory, { CreateAxiosDefaults } from "axios";
-import { onRejectedRequest, onFulfilledRequestSession } from "./interceptors";
-import { applyInterceptors } from "axios-apply-interceptos/applyInterceptors";
-
-export const axios = AxiosFactory.create({
-  baseURL: process.env.BASE_URL,
-} as CreateAxiosDefaults);
+const api = axios.create({ baseURL: "https://api.example.com" });
 
 applyInterceptors(
-  axios.interceptors.request,
-  [onFulfilledRequestSession], // if no interceptors just make []
-  [onRejectedRequest],
+  api.interceptors.request,
+  [addToken, addLocale],
+  [onError],
 );
 ```
+
+Both `addLocale` and `addToken` run on every request — `addLocale` first, then `addToken`.
+
+## API
+
+### `applyInterceptors<T>(manager, fulfilled, rejected)`
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `manager` | `AxiosInterceptorManager<T>` | The interceptor manager (e.g. `axios.interceptors.request`) |
+| `fulfilled` | `InterceptorFunction<T>[]` | Array of fulfilled handlers, composed right-to-left |
+| `rejected` | `InterceptorFunction<T>[]` | Array of error handlers, composed right-to-left |
+
+### `InterceptorFunction<T>`
+
+```ts
+type InterceptorFunction<T> = (value: T) => T | Promise<T>;
+```
+
+Both sync and async handlers are supported. The composition automatically awaits promises before passing the value to the next handler.
+
+## License
+
+ISC
