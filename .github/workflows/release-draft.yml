@@ -1,0 +1,28 @@
+name: 'RC Branch Created'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-rc:
+    if: github.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: vladislavkovaliov/wi-github-actions/.github/actions/env-setup@main
+        with:
+          package-json-path: ./package.json
+          package-manager: npm
+      - name: RC branch detected
+        run: |
+          echo "New RC branch: ${{ github.ref }}"
+      - name: Semantic Release
+        uses: ./.github/workflows/semantic-release
+        with:
+          branch: ${{ github.ref_name }}
+          npm-token: ${{ secrets.NPM_TOKEN }}

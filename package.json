@@ -1,15 +1,17 @@
 {
   "name": "axios-apply-interceptors",
-  "version": "0.0.0-development",
+  "version": "1.0.1",
   "description": "Easy way to apply interceptors via composition",
   "private": false,
   "main": "./dist/index.js",
   "types": "./types/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && rm -rf types && tsc",
+    "build:old": "rm -rf dist && rm -rf types && tsc",
+    "build": "rm -rf dist && tsup",
     "commit": "cz",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "semantic-release": "semantic-release"
+    "test": "tsx --test 'src/**/*.test.ts'",
+    "semantic-release": "semantic-release",
+    "prepare": "npm run build"
   },
   "keywords": [
     "semantic"
@@ -54,10 +56,20 @@
     "typescript": "^5.4.5"
   },
   "devDependencies": {
+    "axios": "^1.18.0",
     "commitizen": "^4.2.6",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^8.0.2",
     "lint-staged": "^13.1.0",
-    "semantic-release": "^23.0.8"
+    "semantic-release": "^23.0.8",
+    "tsup": "^8.5.1",
+    "tsx": "^4.22.4"
+  },
+  "peerDependencies": {
+    "axios": "^1.18.0"
+  },
+  "engines": {
+    "node": "24",
+    "npm": "11"
   }
 }

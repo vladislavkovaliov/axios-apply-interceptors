@@ -10,7 +10,13 @@ function flow(...funcs: Function[]) {
     let j = 0;
     let result = length ? funcs[j].apply(this, args) : args[0];
     while (++j < length) {
-      result = funcs[j].call(this, result);
+      if (result instanceof Promise) {
+        result = result.then(
+          ((k) => (value: unknown) => funcs[k].call(this, value))(j),
+        );
+      } else {
+        result = funcs[j].call(this, result);
+      }
     }
     return result;
   };
